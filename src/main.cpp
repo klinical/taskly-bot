@@ -2,9 +2,7 @@
 #include <utility>
 #include "spdlog/logger.h"
 #include "spdlog/async.h"
-#include "spdlog/spdlog.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
-#include "spdlog/sinks/rotating_file_sink.h"
+#include "spdlog/sinks/basic_file_sink.h"
 
 const std::string    BOT_TOKEN    = "NTkyMTQxMzE3MDkwNDQzNDEy.GTiGy9.Apii6b9f4lsNCebLNRWuZGFff43T9ibKr6w34I";
 const dpp::snowflake MY_GUILD_ID  =  598649811964788755;
@@ -38,23 +36,9 @@ void create_command(dpp::cluster& bot, const dpp::slashcommand& cmd) {
 int main() {
     dpp::cluster bot(BOT_TOKEN);
     todo_list todo_list;
-    const std::string log_name = "mybot.log";
-
-    /* Set up spdlog logger */
-    std::shared_ptr<spdlog::logger> log;
-    spdlog::init_thread_pool(8192, 2);
-    std::vector<spdlog::sink_ptr> sinks;
-    auto stdout_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt >();
-    auto rotating = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(log_name, 1024 * 1024 * 5, 10);
-    sinks.push_back(stdout_sink);
-    sinks.push_back(rotating);
-    log = std::make_shared<spdlog::async_logger>("logs", sinks.begin(), sinks.end(), spdlog::thread_pool(), spdlog::async_overflow_policy::block);
-    spdlog::register_logger(log);
-    log->set_pattern("%^%Y-%m-%d %H:%M:%S.%e [%L] [th#%t]%$ : %v");
-    log->set_level(spdlog::level::level_enum::debug);
+    std::shared_ptr<spdlog::logger> log = spdlog::basic_logger_mt("basic_logger", "log/bot.log");
 
     bot.on_log([&log](const dpp::log_t& event) {
-        std::cout << event.message;
         switch (event.severity) {
             case dpp::ll_critical:
                 log->critical((event.message));
