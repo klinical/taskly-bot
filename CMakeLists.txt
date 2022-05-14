@@ -9,26 +9,28 @@ add_subdirectory(libs/spdlog)
 # Create executable
 add_executable(${PROJECT_NAME}
         src/main.cpp
-        # your others files...
-#        libs/my_lib/src/my_lib.cpp libs/my_lib/include/my_lib.h
-        src/todo/todo_list.cpp src/todo/todo_list.h src/todo/todo_item.cpp src/todo/todo_item.h)
+        src/todo/todo_list.cpp
+        src/todo/todo_item.cpp
+        src/utils/timer.cpp
+        src/utils/event.cpp
+        src/types/processor.cpp
+        src/types/bot_config.cpp
+        src/types/application_state.cpp src/types/logger.cpp src/types/logger.h src/types/data_writer.cpp src/types/data_writer.h)
 
 # Linking libraries
 target_link_libraries(${PROJECT_NAME}
         dpp
-        spdlog
-#        my_lib
-        )
+        spdlog)
 
 # Specify includes paths
 target_include_directories(${PROJECT_NAME} PRIVATE
         libs/DPP/include
         libs/spdlog/include
-#        libs/my_lib/include
-        )
+        src/todo
+        src/utils
+        src/types)
 
 # Set C++ version
 set_target_properties(${PROJECT_NAME} PROPERTIES
         CXX_STANDARD 17
-        CXX_STANDARD_REQUIRED ON
-        )
+        CXX_STANDARD_REQUIRED ON)

@@ -9,7 +9,7 @@
 #include "todo_item.h"
 
 class todo_list {
-    std::vector<todo_item> items;
+    std::vector<todo_item> m_items;
 
 public:
     // Default constructor
@@ -17,6 +17,7 @@ public:
 
     void add_item(todo_item item);
     std::vector<todo_item> get_items();
+    std::string str();
 };
 
 
