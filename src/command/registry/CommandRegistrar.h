@@ -33,9 +33,9 @@ public:
     }
 
     // Seems to be a memory issue around here
-    template <typename T>
-    CommandRegistrar& add_command(std::string name, std::string desc, const T& executable)
+    CommandRegistrar& add_command(const std::string& name, std::string desc, const CommandExecutable& executable)
     {
+        name.c_str();
         CommandRegistrarEntry new_cmd { name, desc, m_app_id, executable };
 
         for (dpp::command_option option : executable.options)

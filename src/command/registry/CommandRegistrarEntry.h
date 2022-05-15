@@ -18,7 +18,7 @@ public:
     dpp::slashcommand slashcommand;
     CommandExecutable executable;
 
-    CommandRegistrarEntry(const std::string& name, const std::string& desc, dpp::snowflake id, CommandExecutable  ex)
+    CommandRegistrarEntry(const std::string& name, const std::string& desc, dpp::snowflake id, const CommandExecutable&  ex)
         : slashcommand{ name, desc, id }, executable{std::move( ex )}
    {}
 };

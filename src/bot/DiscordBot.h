@@ -53,9 +53,13 @@ public:
         });
         m_cluster.on_interaction_create([this](const dpp::interaction_create_t& event)
         {
-            m_cluster.log(dpp::ll_info, event.command.get_command_name());
-            CommandRegistrarEntry command = command_registrar.get_command(event.command.get_command_name());
+            std::string command_name = event.command.get_command_name();
 
+            m_cluster.log(dpp::ll_info, command_name);
+            // Look up command in registrar
+            CommandRegistrarEntry command = command_registrar.get_command(command_name);
+
+            // Build ctx
             ExecutionContextBuilder eb;
             ExecutionContext ctx {
                 eb.event(event)
@@ -65,6 +69,7 @@ public:
                 .build()
             };
 
+            // Executable has a dangling pointer
             command.executable.execute(ctx);
         });
 
