@@ -19,7 +19,7 @@ void logger::write_to_log(dpp::loglevel severity, const char* data) {
     }
 }
 
-logger_type logger::get_instance() {
+logger::logger_type logger::get_instance() {
     static logger_type instance { spdlog::basic_logger_mt("logger", "log/bot.log") };
 
     return instance;

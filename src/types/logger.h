@@ -26,7 +26,6 @@ private:
 
 public:
     // Prevent all other forms of initialization, (re)assignment
-    logger(logger const&)           = delete;
     void operator= (logger const&)  = delete;
 };
 

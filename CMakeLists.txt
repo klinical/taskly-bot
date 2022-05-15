@@ -9,13 +9,20 @@ add_subdirectory(libs/spdlog)
 # Create executable
 add_executable(${PROJECT_NAME}
         src/main.cpp
-        src/todo/todo_list.cpp
-        src/todo/todo_item.cpp
-        src/utils/timer.cpp
-        src/utils/event.cpp
-        src/types/processor.cpp
-        src/types/bot_config.cpp
-        src/types/application_state.cpp src/types/logger.cpp src/types/logger.h src/types/data_writer.cpp src/types/data_writer.h)
+        src/types/todo_list.cpp
+        src/types/todo_item.cpp
+        src/types/logger.cpp
+        src/types/data_writer.cpp
+        src/bot/DiscordBot.cpp
+        src/bot/BotConfig.cpp
+        src/data/DataManager.cpp
+        src/command/registry/CommandRegistrar.cpp
+        src/command/registry/CommandRegistrarEntry.cpp
+        src/command/executable/ExecutionContextBuilder.cpp
+        src/command/executable/ExecutionContext.cpp
+        src/command/executable/ListCommand.cpp
+        src/command/executable/AddItemCommand.cpp
+        src/command/executable/CommandExecutable.cpp)
 
 # Linking libraries
 target_link_libraries(${PROJECT_NAME}
@@ -26,9 +33,11 @@ target_link_libraries(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME} PRIVATE
         libs/DPP/include
         libs/spdlog/include
-        src/todo
-        src/utils
-        src/types)
+        src/bot
+        src/command
+        src/data
+        src/types
+        src/utils)
 
 # Set C++ version
 set_target_properties(${PROJECT_NAME} PROPERTIES
