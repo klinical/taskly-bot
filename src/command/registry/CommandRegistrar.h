@@ -8,11 +8,11 @@
 
 #include <string>
 #include <unordered_map>
-#include "CommandRegistrarEntry.h"
+#include "Command.h"
 
 class CommandRegistrar {
 public:
-    typedef std::unordered_map<std::string, CommandRegistrarEntry> CommandMap;
+    typedef std::unordered_map<std::string, Command> CommandMap;
 
 private:
     dpp::snowflake guild_id{3};
@@ -27,18 +27,26 @@ public:
         return *this;
     }
 
-    CommandRegistrarEntry get_command(const std::string& key)
+    Command get_command(const std::string& key)
     {
         return commands.at(key);
     }
 
     // Seems to be a memory issue around here
-    CommandRegistrar& add_command(const dpp::slashcommand& command, ICommandExecutable* executable)
+    CommandRegistrar& add_command(Command command)
     {
-        CommandRegistrarEntry new_cmd { command.name, command.description, m_app_id, executable };
-        commands.insert({ command.name, new_cmd });
+        commands.insert({command.m_cmd->name, command});
 
         return *this;
+    }
+
+    ~CommandRegistrar()
+    {
+        // Free the dynamically allocated memory for all the commands
+        for (const std::pair<const std::basic_string<char>, Command>& cmd : commands) {
+            delete cmd.second.m_cmd;
+            delete cmd.second.m_executor;
+        }
     }
 
     CommandRegistrar& add_guild(dpp::snowflake id)
@@ -52,7 +60,7 @@ public:
     {
         for (auto const& [_, cmd] : commands)
         {
-            cluster.guild_command_create(cmd.slashcommand, guild_id);
+            cluster.guild_command_create(*(cmd.m_cmd), guild_id);
         }
     }
 

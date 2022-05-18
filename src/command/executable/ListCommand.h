@@ -5,7 +5,6 @@
 #ifndef DISCORD_BOT_LISTCOMMAND_H
 #define DISCORD_BOT_LISTCOMMAND_H
 
-#include "registry/CommandRegistrarEntry.h"
 #include "ICommandExecutable.h"
 
 class ListCommand: public ICommandExecutable {

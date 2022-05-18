@@ -14,6 +14,8 @@ class ICommandExecutable {
 public:
     // Pure virtual function
     virtual void execute(const ExecutionContext& ctx) const = 0;
+
+    virtual ~ICommandExecutable() = default;
 };
 
 
