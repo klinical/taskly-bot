@@ -16,6 +16,7 @@
 #include "executable/ListCommand.h"
 #include "executable/AddItemCommand.h"
 #include "dpp/once.h"
+#include "SlashCommandFactory.h"
 
 class DiscordBot {
     BotConfig m_config;
@@ -51,6 +52,7 @@ public:
                     break;
             }
         });
+
         m_cluster.on_interaction_create([this](const dpp::interaction_create_t& event)
         {
             std::string command_name = event.command.get_command_name();
@@ -62,15 +64,15 @@ public:
             // Build ctx
             ExecutionContextBuilder eb;
             ExecutionContext ctx {
-                eb.event(event)
-                .logger(m_logger)
-                .cluster(m_cluster)
-                .data(m_data)
-                .build()
+                eb.set_event(event)
+                    .set_logger(m_logger)
+                    .set_cluster(m_cluster)
+                    .set_writer(m_data)
+                    .build()
             };
 
             // Executable has a dangling pointer
-            command.executable.execute(ctx);
+                command.executable->execute(ctx);
         });
 
         m_cluster.on_ready([this](const dpp::ready_t& event)
@@ -80,11 +82,16 @@ public:
                 // memory issue origin
                 // likely *Command objects are being released at the end of add_component
                 // and having their mem. freed
+                SlashCommandFactory cmd_factory { m_config.get_guild_id() };
+                auto* list_cmd = new ListCommand();
+
                 command_registrar
                     .set_app_id(m_cluster.me.id)
                     .add_guild(m_config.get_guild_id())
-                    .add_command("list", "test", ListCommand())
-                    .add_command("add","test",AddItemCommand())
+                    .add_command(cmd_factory.build_command(
+                            "list", "test?", nullptr
+                            ),
+                                 list_cmd)
                     .register_commands(m_cluster);
                 m_cluster.log(dpp::ll_info, "test");
             }

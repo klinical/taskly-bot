@@ -33,17 +33,10 @@ public:
     }
 
     // Seems to be a memory issue around here
-    CommandRegistrar& add_command(const std::string& name, std::string desc, const CommandExecutable& executable)
+    CommandRegistrar& add_command(const dpp::slashcommand& command, ICommandExecutable* executable)
     {
-        name.c_str();
-        CommandRegistrarEntry new_cmd { name, desc, m_app_id, executable };
-
-        for (dpp::command_option option : executable.options)
-        {
-            new_cmd.slashcommand.add_option(option);
-        }
-
-        commands.insert({ name, new_cmd });
+        CommandRegistrarEntry new_cmd { command.name, command.description, m_app_id, executable };
+        commands.insert({ command.name, new_cmd });
 
         return *this;
     }

@@ -14,30 +14,33 @@
 
 class ExecutionContextBuilder {
 private:
-    ExecutionContext ctx{ };
+    const dpp::interaction_create_t* m_event;
+    const dpp::cluster* m_cluster;
+    std::shared_ptr<spdlog::logger> m_logger;
+    std::string m_writer;
 
 public:
     [[nodiscard]]
-    ExecutionContextBuilder& event(const dpp::interaction_create_t& event) {
-        ctx.m_event = &event;
+    ExecutionContextBuilder& set_event(const dpp::interaction_create_t& event) {
+        m_event = &event;
 
         return *this;
     }
 
-    ExecutionContextBuilder& cluster(const dpp::cluster& cluster) {
-        ctx.m_cluster = &cluster;
+    ExecutionContextBuilder& set_cluster(const dpp::cluster& cluster) {
+        m_cluster = &cluster;
 
         return *this;
     }
 
-    ExecutionContextBuilder& logger(std::shared_ptr<spdlog::logger> logger) {
-        ctx.m_logger = std::move(logger);
+    ExecutionContextBuilder& set_logger(std::shared_ptr<spdlog::logger> logger) {
+        m_logger = std::move(logger);
 
         return *this;
     }
 
-    ExecutionContextBuilder& data(std::string data) {
-        ctx.m_data = std::move(data);
+    ExecutionContextBuilder& set_writer(std::string writer) {
+        m_writer = std::move(writer);
 
         return *this;
     }
@@ -46,9 +49,9 @@ public:
      * Todo, error handling
      * @return
      */
-    ExecutionContext& build()
+    ExecutionContext build()
     {
-        return ctx;
+        return ExecutionContext{ m_event, m_cluster, m_logger };
     }
 };
 

@@ -6,22 +6,14 @@
 #define DISCORD_BOT_LISTCOMMAND_H
 
 #include "registry/CommandRegistrarEntry.h"
-#include "CommandExecutable.h"
+#include "ICommandExecutable.h"
 
-class ListCommand: public CommandExecutable {
+class ListCommand: public ICommandExecutable {
 public:
-    std::vector<dpp::command_option> options{};
-
-    void execute(const ExecutionContext& ctx) override
+    void execute(const ExecutionContext& ctx) const override
     {
         // todo, actually use data
-        ctx.m_event->reply(ctx.m_data);
-    }
-
-    ListCommand()
-    {
-        // add all options here
-        options.emplace_back( dpp::co_string, "message", "hi" );
+        ctx.m_event->reply("Something works lmao");
     }
 };
 

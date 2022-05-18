@@ -10,17 +10,21 @@
 
 #include "dpp/dispatcher.h"
 #include "../executable/ExecutionContext.h"
-#include "executable/CommandExecutable.h"
+#include "executable/ICommandExecutable.h"
 
 class CommandRegistrarEntry {
 
 public:
     dpp::slashcommand slashcommand;
-    CommandExecutable executable;
+    const ICommandExecutable* executable;
 
-    CommandRegistrarEntry(const std::string& name, const std::string& desc, dpp::snowflake id, const CommandExecutable&  ex)
-        : slashcommand{ name, desc, id }, executable{std::move( ex )}
-   {}
+    CommandRegistrarEntry(
+            const std::string& name,
+            const std::string& desc, dpp::snowflake id,
+            ICommandExecutable*  ex
+            )
+        : slashcommand{ name, desc, id }, executable{ ex }
+   { }
 };
 
 #endif //DISCORD_BOT_COMMANDREGISTRARENTRY_H

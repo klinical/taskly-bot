@@ -14,18 +14,16 @@
 class logger {
 public:
     typedef std::shared_ptr<spdlog::logger> logger_type;
-
+    static logger_type get_instance();
     logger_type m_spdlog;
 
     void write_to_log(dpp::loglevel severity, const char* data);
-
-    static logger_type get_instance();
 private:
     // Prevent default constructor (but implement privately), initialize with a basic logger
     logger(): m_spdlog {spdlog::basic_logger_mt("logger", "log/bot.log")} { }
 
 public:
-    // Prevent all other forms of initialization, (re)assignment
+    // Prevent (re)assignment
     void operator= (logger const&)  = delete;
 };
 

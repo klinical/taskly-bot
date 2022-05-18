@@ -6,13 +6,13 @@
 #define DISCORD_BOT_ADDITEMCOMMAND_H
 
 #include "ExecutionContext.h"
-#include "CommandExecutable.h"
+#include "ICommandExecutable.h"
 
-class AddItemCommand: public CommandExecutable {
+class AddItemCommand: public ICommandExecutable {
 public:
-    void execute(const ExecutionContext& ctx) override
+    void execute(const ExecutionContext& ctx) const override
     {
-        ctx.m_event->reply(ctx.m_data);
+        ctx.m_event->reply("erm");
     }
 };
 
