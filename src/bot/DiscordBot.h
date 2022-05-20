@@ -18,6 +18,12 @@
 #include "SlashCommandFactory.h"
 
 class DiscordBot {
+public:
+    enum LaunchMode {
+        standard,
+        fresh,
+    };
+
     BotConfig m_config;
     dpp::cluster m_cluster;
 
@@ -26,8 +32,11 @@ class DiscordBot {
     std::string m_data{};
 
 public:
-    void start()
+    void start(LaunchMode mode)
     {
+        if (mode == LaunchMode::fresh)
+            register_commands();
+
         m_cluster.start(false);
     }
 
@@ -77,44 +86,48 @@ public:
         m_cluster.on_ready([this](const dpp::ready_t& event)
         {
             if (dpp::run_once<struct register_bot_commands>()) {
-                // Register the commands
-                // memory issue origin
-                // likely *Command objects are being released at the end of add_component
-                // and having their mem. freed
-                SlashCommandFactory cmd_factory{ };
-                cmd_factory.app_id(m_cluster.me.id);
+                m_logger->info("Bot started successfully.");
+            }
+        });
+    }
 
-                auto list_cmd = new ListCommand();
-                auto add_cmd = new AddItemCommand();
-                auto add_cmd_opts = {
-                        dpp::command_option{
-                            dpp::co_string,
-                            "list",
-                            "list name to add to"
-                            }
-                };
+    void register_commands()
+    {
+        // Register the commands
+        SlashCommandFactory cmd_factory{ };
+        cmd_factory.app_id(m_cluster.me.id);
 
-                command_registrar
-                    .set_app_id(m_cluster.me.id)
-                    .add_guild(m_config.get_guild_id())
-                    .add_command(
-                            cmd_factory
+        auto list_cmd = new ListCommand();
+        auto add_cmd = new AddItemCommand();
+        auto add_cmd_opts = {
+                dpp::command_option{
+                        dpp::co_string,
+                        "list",
+                        "list name to add to"
+                }
+        };
+
+        command_registrar
+                .set_app_id(m_cluster.me.id)
+                .add_guild(m_config.get_guild_id())
+                .add_command(
+                        cmd_factory
                                 .executor(list_cmd)
                                 .title("list")
                                 .desc("list all items")
                                 .build()
-                            )
-                    .add_command(
-                            cmd_factory
+                )
+                .add_command(
+                        cmd_factory
                                 .executor(add_cmd)
                                 .title("add")
                                 .desc("add a new item")
                                 .options(add_cmd_opts)
                                 .build()
-                            )
-                    .register_commands(m_cluster);
-            }
-        });
+                )
+                .register_commands(m_cluster);
+
+        m_logger->info("Registered commands.");
     }
 };
 
