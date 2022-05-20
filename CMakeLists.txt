@@ -21,7 +21,10 @@ add_executable(${PROJECT_NAME}
         src/command/executable/ExecutionContext.cpp
         src/command/executable/ListCommand.cpp
         src/command/executable/AddItemCommand.cpp
-        src/command/executable/ICommandExecutable.cpp src/command/SlashCommandFactory.cpp src/command/SlashCommandFactory.h src/command/Command.cpp src/command/Command.h src/types/SimplePtr.cpp src/types/SimplePtr.h)
+        src/command/executable/ICommandExecutable.cpp
+        src/command/SlashCommandFactory.cpp
+        src/command/Command.cpp
+        src/types/SimplePtr.cpp)
 
 # Linking libraries
 target_link_libraries(${PROJECT_NAME}
@@ -32,6 +35,7 @@ target_link_libraries(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME} PRIVATE
         libs/DPP/include
         libs/spdlog/include
+        libs/json
         src/bot
         src/command
         src/data
