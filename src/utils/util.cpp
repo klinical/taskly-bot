@@ -46,7 +46,7 @@ namespace util
         // Move file pointer to pos of first char of starting line of target object in file
         stream.seekg(location.first);
 
-        // Read a line and reset pointer back to beginning
+        // Read a line
         std::string line;
         std::getline(stream, line);
 

@@ -11,12 +11,32 @@ void DiscordBot::register_commands() {
 
     auto list_cmd = new ListCommand();
     auto add_cmd = new AddItemCommand();
+
     auto add_cmd_opts = {
             dpp::command_option{
                     dpp::co_string,
                     "list",
-                    "list name to add to"
+                    "list"
             }
+    };
+
+    auto list_cmd_opts = {
+            dpp::command_option{
+                dpp::co_sub_command,
+                "view",
+                "view a list"
+            }.add_option(
+                    dpp::command_option{
+                            dpp::co_string,
+                            "view2",
+                            "view 2a list"
+                    }
+                    )
+//            dpp::command_option{
+//                dpp::co_string,
+//                "delete",
+//                "delete a list item"
+//            }
     };
 
     command_registrar
@@ -27,6 +47,7 @@ void DiscordBot::register_commands() {
                             .executor(list_cmd)
                             .title("list")
                             .desc("list all items")
+                            .options(list_cmd_opts)
                             .build()
             )
             .add_command(
@@ -48,7 +69,6 @@ DiscordBot::DiscordBot(BotConfig cfg, LaunchMode mode)
         m_data_manager{ std::make_unique<DataManager>(std::string("../data.json"), m_logger) },
         m_launch_mode{ mode }
 {
-    std::cout << "Allocating bot\n";
     m_cluster->on_log([this](const dpp::log_t& event) {
         std::cout << event.message << '\n';
         switch (event.severity) {
@@ -110,7 +130,7 @@ DiscordBot::DiscordBot(BotConfig cfg, LaunchMode mode)
     catch(json::exception& ex)
     {
         m_cluster->log(dpp::ll_critical, "Exception parsing JSON");
-            m_cluster->log(dpp::ll_critical, ex.what());
+        m_cluster->log(dpp::ll_critical, ex.what());
     }
     catch(...)
     {

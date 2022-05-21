@@ -11,23 +11,35 @@ class ListCommand: public ICommandExecutable {
 public:
     void execute(const ExecutionContext& ctx) const override
     {
-        DataManager::ListMap* writer_data = ctx.m_writer->full_list();
+        auto cmd_data = ctx.m_event->command.get_command_interaction();
 
-        std::stringstream ss;
-
-        for (const auto& [list_key, list_items] : *writer_data)
+        if (!cmd_data.options.empty())
         {
-            ss << "[" << &list_key << "]\n";
-
-            int i{ };
-            for (const auto& list_item : list_items)
-            {
-                ++i;
-                ss << i << ". " << &list_item << '\n';
-            }
+            std::string str{ std::get<std::string>(cmd_data.options[0].options[0].value) };
+            std::cout << str << std::endl;
+//            ctx.m_event->reply(cmd_data.options[0].name);
+            ctx.m_event->reply(str);
         }
+        else
+        {
+            DataManager::ListMap* writer_data = ctx.m_writer->full_list();
 
-        ctx.m_event->reply(ss.str());
+            std::stringstream ss;
+
+            for (const auto& [list_key, list_items] : *writer_data)
+            {
+                ss << "[" << list_key << "]\n";
+
+                int i{ };
+                for (const auto& list_item : *list_items)
+                {
+                    ++i;
+                    ss << i << ". " << list_item << '\n';
+                }
+            }
+
+            ctx.m_event->reply(ss.str());
+        }
     }
 };
 

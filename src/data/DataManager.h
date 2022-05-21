@@ -21,7 +21,7 @@ class DataManager {
      * Value: a linked list of the list's items
      */
 public:
-    typedef std::map<std::string, std::list<std::string>> ListMap;
+    typedef std::map<std::string, std::unique_ptr<std::list<std::string>>> ListMap;
 
 private:
     std::fstream m_fstream;
@@ -32,7 +32,7 @@ private:
 
 public:
     void load_data();
-    void remove_list_item(std::string key, std::string val);
+    void remove_list_item(std::string key, int idx);
     ListMap* full_list();
 
     explicit DataManager(const std::string& file_loc, std::shared_ptr<spdlog::logger> logger);

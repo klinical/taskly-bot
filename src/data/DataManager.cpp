@@ -24,14 +24,14 @@ DataManager::ListMap* DataManager::full_list()
     return &m_list;
 }
 
-void DataManager::remove_list_item(std::string key, std::string val)
+void DataManager::remove_list_item(std::string key, int idx)
 {
     auto object_index_number{ util::find_item_in_list() };
 
     // Object was found?
     if (object_index_number.first >= 0)
     {
-        m_fstream.seekg(object_index_number.first);
+        util::remove_item_from_list(object_index_number, idx);
     }
 }
 
@@ -47,15 +47,12 @@ void DataManager::load_data()
 
     for (auto& [list_key, file_list] : j.items())
     {
-        std::list<std::string> item_list{ };
-
-        for(auto& [key, value] : file_list.items())
+        auto item_list{ std::make_unique<std::list<std::string>>() };
+        for(auto [key, value] : file_list.items())
         {
-            auto _item = value.get<std::string>();
-            m_logger->info("Read item from key " + list_key + " value " + _item);
-            file_list.emplace_back(value);
+            item_list->emplace_back(value);
         }
 
-        m_list.insert({ list_key, std::move(item_list) } );
+        m_list.insert({ std::string(list_key), std::move(item_list) } );
     }
 }

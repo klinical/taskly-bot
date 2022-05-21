@@ -18,7 +18,6 @@ add_executable(${PROJECT_NAME}
         src/command/executable/ExecutionContext.cpp
         src/command/executable/ListCommand.cpp
         src/command/executable/AddItemCommand.cpp
-        src/command/executable/ICommandExecutable.cpp
         src/command/SlashCommandFactory.cpp
         src/command/Command.cpp
         src/types/SimplePtr.cpp src/utils/util.cpp src/utils/util.h)
