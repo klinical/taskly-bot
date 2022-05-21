@@ -1,6 +1,7 @@
 
 #include "spdlog/spdlog.h"
 #include "bot/DiscordBot.h"
+#include "util.h"
 
 int main(int argc, char* argv[])
 {
@@ -11,22 +12,38 @@ int main(int argc, char* argv[])
 
         // Init bot
         DiscordBot::LaunchMode mode{ DiscordBot::LaunchMode::standard };
-        DiscordBot discord_bot { BotConfig::from_file("../bot.cfg") };
 
         if (argc > 1)
         {
-            std::cout << argv[0] << '\n';
-            std::cout << argv[1] << '\n';
             std::string_view init_mode{ argv[1] };
 
             if (init_mode == "--load-cmds")
             {
                 mode = DiscordBot::LaunchMode::fresh;
-                discord_bot.register_commands();
+            }
+            else if (init_mode == "--run-tests")
+            {
+                mode = DiscordBot::LaunchMode::test;
+
+                auto pos = util::find_item_in_list();
+                util::remove_item_from_list(pos, 0);
+
+                if (util::find_item_in_list().first < 0)
+                {
+                    throw std::exception();
+                }
+                else
+                {
+                    std::cout << "Tests passed successfully." << std::endl;
+                }
             }
         }
 
-        discord_bot.start(mode);
+        if (mode != DiscordBot::LaunchMode::test)
+        {
+            DiscordBot discord_bot { BotConfig::from_file("../bot.cfg"), mode };
+            discord_bot.start();
+        }
     }
     catch(const std::exception& ex)
     {

@@ -11,8 +11,23 @@ class ListCommand: public ICommandExecutable {
 public:
     void execute(const ExecutionContext& ctx) const override
     {
-        // todo, actually use data
-        ctx.m_event->reply("Something works lmao");
+        DataManager::ListMap* writer_data = ctx.m_writer->full_list();
+
+        std::stringstream ss;
+
+        for (const auto& [list_key, list_items] : *writer_data)
+        {
+            ss << "[" << &list_key << "]\n";
+
+            int i{ };
+            for (const auto& list_item : list_items)
+            {
+                ++i;
+                ss << i << ". " << &list_item << '\n';
+            }
+        }
+
+        ctx.m_event->reply(ss.str());
     }
 };
 

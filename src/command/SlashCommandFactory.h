@@ -57,6 +57,8 @@ public:
     SlashCommandFactory& executor(ICommandExecutable* executor)
     {
         m_executor = executor;
+
+        return *this;
     }
 
     [[nodiscard]]

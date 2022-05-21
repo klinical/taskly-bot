@@ -10,6 +10,7 @@
 
 #include "dpp/cluster.h"
 #include "spdlog/logger.h"
+#include "DataManager.h"
 
 /**
  * Fluent design, ExecutionContext must be constructed by a builder which sets all of it's fields
@@ -18,8 +19,8 @@
 class ExecutionContext {
 public:
     const dpp::interaction_create_t* m_event{};
-    const dpp::cluster* m_cluster{};
-    std::string m_data{};
+
+    DataManager* m_writer;
     std::shared_ptr<spdlog::logger> m_logger;
 
 private:
@@ -28,12 +29,12 @@ private:
     [[maybe_unused]]
     ExecutionContext(
             const dpp::interaction_create_t *pCreate,
-            const dpp::cluster *pCluster,
-            std::shared_ptr<spdlog::logger> pLogger
+            std::shared_ptr<spdlog::logger> pLogger,
+            DataManager* writer
     ):
             m_event{ pCreate },
-            m_cluster{ pCluster },
-            m_logger{std::move( pLogger )}
+            m_logger{std::move( pLogger )},
+            m_writer{ writer }
     { };
 
     friend class ExecutionContextBuilder;

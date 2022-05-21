@@ -7,14 +7,15 @@
 
 #include <utility>
 
-#include "BotConfig.h"
+#include "dpp/once.h"
 #include "dpp/cluster.h"
+
+#include "BotConfig.h"
 #include "logger.h"
 #include "registry/CommandRegistrar.h"
 #include "executable/ExecutionContextBuilder.h"
 #include "executable/ListCommand.h"
 #include "executable/AddItemCommand.h"
-#include "dpp/once.h"
 #include "SlashCommandFactory.h"
 #include "DataManager.h"
 
@@ -23,21 +24,23 @@ public:
     enum LaunchMode {
         standard,
         fresh,
+        test
     };
 
 private:
     BotConfig m_config;
-    dpp::cluster m_cluster;
+    std::unique_ptr<dpp::cluster> m_cluster;
+    LaunchMode m_launch_mode;
 
     CommandRegistrar command_registrar;
+
     std::shared_ptr<spdlog::logger> m_logger{ logger::get_instance() };
-    DataManager _m_data{ "data_file" };
-    std::string m_data{};
+    std::unique_ptr<DataManager> m_data_manager;
 
 public:
-    explicit DiscordBot(BotConfig cfg);
+    explicit DiscordBot(BotConfig cfg, LaunchMode mode);
 
-    void start(LaunchMode mode);
+    void start();
     void register_commands();
 };
 

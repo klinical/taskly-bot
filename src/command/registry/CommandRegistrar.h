@@ -56,11 +56,11 @@ public:
         return *this;
     }
 
-    void register_commands(dpp::cluster& cluster)
+    void register_commands(dpp::cluster* cluster)
     {
         for (auto const& [_, cmd] : commands)
         {
-            cluster.guild_command_create(*(cmd.m_cmd), guild_id);
+            cluster->guild_command_create(*(cmd.m_cmd), guild_id);
         }
     }
 

@@ -5,7 +5,6 @@
 #ifndef DISCORD_BOT_BOTCONFIG_H
 #define DISCORD_BOT_BOTCONFIG_H
 
-
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -45,7 +44,8 @@ public:
         return this->bot_token;
     }
 
-    dpp::snowflake get_guild_id()
+    [[nodiscard]]
+    dpp::snowflake get_guild_id() const
     {
         return guild_id;
     }

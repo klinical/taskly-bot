@@ -15,9 +15,10 @@
 class ExecutionContextBuilder {
 private:
     const dpp::interaction_create_t* m_event;
-    const dpp::cluster* m_cluster;
+    dpp::cluster* m_cluster;
+
     std::shared_ptr<spdlog::logger> m_logger;
-    std::string m_writer;
+    DataManager* m_writer;
 
 public:
     [[nodiscard]]
@@ -27,20 +28,20 @@ public:
         return *this;
     }
 
-    ExecutionContextBuilder& set_cluster(const dpp::cluster& cluster) {
-        m_cluster = &cluster;
-
-        return *this;
-    }
+//    ExecutionContextBuilder& set_cluster(dpp::cluster* cluster) {
+//        m_cluster = cluster;
+//
+//        return *this;
+//    }
 
     ExecutionContextBuilder& set_logger(std::shared_ptr<spdlog::logger> logger) {
-        m_logger = std::move(logger);
+        m_logger = logger;
 
         return *this;
     }
 
-    ExecutionContextBuilder& set_writer(std::string writer) {
-        m_writer = std::move(writer);
+    ExecutionContextBuilder& set_writer(DataManager* writer) {
+        m_writer = writer;
 
         return *this;
     }
@@ -51,7 +52,7 @@ public:
      */
     ExecutionContext build()
     {
-        return ExecutionContext{ m_event, m_cluster, m_logger };
+        return ExecutionContext{ m_event,  m_logger, m_writer };
     }
 };
 
