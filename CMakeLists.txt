@@ -9,10 +9,7 @@ add_subdirectory(libs/spdlog)
 # Create executable
 add_executable(${PROJECT_NAME}
         src/main.cpp
-        src/types/todo_list.cpp
-        src/types/todo_item.cpp
         src/types/logger.cpp
-        src/types/data_writer.cpp
         src/bot/DiscordBot.cpp
         src/bot/BotConfig.cpp
         src/data/DataManager.cpp
